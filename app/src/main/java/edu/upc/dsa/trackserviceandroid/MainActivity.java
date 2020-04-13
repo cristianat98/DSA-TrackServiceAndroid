@@ -1,6 +1,8 @@
 package edu.upc.dsa.trackserviceandroid;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.View;
@@ -8,6 +10,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -20,6 +23,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
     TextView canciones;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://localhost:8080/dsaApp/")
+                .baseUrl("http://10.0.2.2:8080/dsaApp/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -52,14 +58,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<List<Tracks>> call, Response<List<Tracks>> response) {
                 List<Tracks> result = response.body();
-                String texto = "Canciones:";
-
-                for (Tracks t : result) {
-                    texto = texto + t.singer + ",";
-                }
-
-                texto = texto + "]";
-                canciones.setText(texto);
+                setContentView(R.layout.lista_tracks);
+                recyclerView = (RecyclerView) findViewById(R.id.my_recycler_view);
+                // use this setting to
+                // improve performance if you know that changes
+                // in content do not change the layout size
+                // of the RecyclerView
+                recyclerView.setHasFixedSize(true);
+                // use a linear layout manager
+                layoutManager = new LinearLayoutManager();
+                recyclerView.setLayoutManager(layoutManager);
+                List<String> input = new ArrayList<>();
+                for (int i = 0; i < result.size(); i++) {
+                    input.add("Test" + i);
+                }// define an adapter
+                mAdapter = new MyAdapter(input);
+                recyclerView.setAdapter(mAdapter);
             }
 
             @Override
@@ -68,4 +82,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void atras (View v){
+
+        setContentView(R.layout.activity_main);
+    }
 }
+
