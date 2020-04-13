@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -32,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        layoutManager = new LinearLayoutManager(this);
         canciones = (TextView)findViewById(R.id.canciones);
     }
 
@@ -66,13 +68,10 @@ public class MainActivity extends AppCompatActivity {
                 // of the RecyclerView
                 recyclerView.setHasFixedSize(true);
                 // use a linear layout manager
-                layoutManager = new LinearLayoutManager();
+
                 recyclerView.setLayoutManager(layoutManager);
-                List<String> input = new ArrayList<>();
-                for (int i = 0; i < result.size(); i++) {
-                    input.add("Test" + i);
-                }// define an adapter
-                mAdapter = new MyAdapter(input);
+                // define an adapter
+                mAdapter = new MyAdapter(result);
                 recyclerView.setAdapter(mAdapter);
             }
 
